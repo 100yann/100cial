@@ -4,11 +4,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post, PostForm, Comment, CommentForm
 
 
 def index(request):
-    return render(request, "network/index.html")
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            new_post = form.cleaned_data['post']
+            user = User.objects.get(id=request.user.id)
+            Post.objects.create(author=user, post=new_post)
+    context = {
+        'create_post': PostForm,
+        'posts': Post.objects.all()
+    }
+    return render(request, "network/index.html", context)
 
 
 def login_view(request):
