@@ -15,7 +15,10 @@
                     {{ post.author }}
                     {{ post.post }}
                     {{ post.timestamp }}
-                    {{ post.likes_count }}
+                    <div id="likes">
+                        <button id='like' data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Like</button>
+                        <span id="num-likes">{{ post.likes_count }}</span>
+                    </div>
                 </div>
             {% endfor %}
         </div>

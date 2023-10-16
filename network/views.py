@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+
+import json
 
 from .models import User, Post, PostForm, Comment, CommentForm
 
@@ -73,3 +75,20 @@ def register(request):
         return render(request, "network/register.html")
 
 
+def like_post(request, id):
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
+    
+    post = Post.objects.get(pk=id)
+    user = request.user
+
+    
+    if post.likes.filter(id=user.id).exists():
+        post.likes.remove(request.user)
+        status = 204
+
+    else:
+        post.likes.add(request.user)
+        status = 200
+    
+    return HttpResponse(status=status)

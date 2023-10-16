@@ -18,7 +18,7 @@ class Post(models.Model):
 
     def likes_count(self) -> int:
         return self.likes.all().count()
-
+    
 
 # Model to store all comments
 class Comment(models.Model):
