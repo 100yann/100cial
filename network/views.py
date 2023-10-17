@@ -76,19 +76,33 @@ def register(request):
 
 
 def like_post(request, id):
-    if request.method != "PUT":
-        return JsonResponse({"error": "PUT request required."}, status=400)
-    
     post = Post.objects.get(pk=id)
     user = request.user
-
     
-    if post.likes.filter(id=user.id).exists():
-        post.likes.remove(request.user)
-        status = 204
-
-    else:
-        post.likes.add(request.user)
-        status = 200
+    if request.method == "PUT":
+        if post.likes.filter(id=user.id).exists():
+            post.likes.remove(request.user)
+            messsage = f"User unliked post {id}"
+            liked = False
+        else:
+            post.likes.add(request.user)
+            messsage = f"User liked post {id}"
+            liked = True
     
-    return HttpResponse(status=status)
+        return JsonResponse({
+            'message': messsage,
+            'found': liked
+            })
+    
+    elif request.method == "GET":
+        if post.likes.filter(id=user.id).exists():
+            message = f'User already liked post {id}'
+            liked = True
+        else:
+            message = f'User has not liked post {id}'
+            liked = False
+
+        return JsonResponse({
+            'message': message,
+            'found': liked
+        })
