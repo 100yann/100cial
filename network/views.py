@@ -19,7 +19,7 @@ def index(request):
 
     context = {
         'create_post': PostForm,
-        'posts': Post.objects.all(),
+        'posts': Post.objects.all().order_by('-timestamp'),
         'add_comment': CommentForm,
         'all_comments': Comment.objects.all().order_by("-timestamp")
     }
@@ -119,7 +119,6 @@ def add_comment(request, id):
         user = User.objects.get(pk=request.user.id)
         new_comment = Comment(post=post, text=comment, user=user)
         new_comment.save()
-        print(new_comment.timestamp)
         context = {
             'message': 'Comment added successfully!',
             'new_comment': {
@@ -130,3 +129,17 @@ def add_comment(request, id):
             }
         }
         return JsonResponse(context)
+    
+
+def edit_post(request, id):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        new_text = data.get('newText')
+        updated_post = Post.objects.get(pk=id)
+        if request.user == updated_post.author:
+            updated_post.post = new_text
+            updated_post.save()
+            return JsonResponse({'message': 'Post edited successfully'})
+        else:
+            return JsonResponse({'message': 'Not authenticated'},status=401)
+    return JsonResponse({'message': 'Not authenticated'}, status=401)

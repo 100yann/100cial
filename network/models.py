@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -40,7 +41,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ["post"]
         widgets = {
-            'post': forms.TextInput(attrs={'class': 'form-control'})
+            'post': forms.TextInput(attrs={'class': 'form-control', 'id': 'post-text'})
         }
 
 

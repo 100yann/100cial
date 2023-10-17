@@ -110,5 +110,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }   
         }
+    const editButtons = document.querySelectorAll('#edit')
+    editButtons.forEach((element) =>{
+        const elementParent = element.parentElement.parentElement
+        element.onclick = () => editPost(elementParent, headers)
+    })   
     })
 })
+
+function editPost(element, headers){
+    const postId = element.querySelector('#like').getAttribute('data-post-id')
+    
+    const originalText = element.querySelector('#post-text')
+    element.querySelector('#post-text').innerHTML = `
+        <textarea id='edit-field' class='form-control'>${originalText.textContent}</textarea>
+        <button id='save-edit'>Save</button>
+        `
+    element.querySelector('#edit').style.display = 'none'
+    const textarea = element.querySelector('#edit-field');
+
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+    const saveButton = element.querySelector('#save-edit')
+    saveButton.onclick = () => {
+        const newText = textarea.value
+        element.querySelector('#post-text').innerHTML = `
+            ${newText}`
+        
+        element.querySelector('#edit').style.display = 'block'
+
+        fetch(`/edit/${postId}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({
+                'newText': newText
+            })
+        })
+    }
+}

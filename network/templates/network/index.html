@@ -13,7 +13,7 @@
             {% for post in posts %}
                 <div class="single-post">
                     {{ post.author }}
-                    {{ post.post }}
+                    <div id="post-text">{{post.post}}</div>
                     {{ post.timestamp }}
                     <div class="interactions">
                         <div id="likes">
@@ -42,6 +42,9 @@
                                 <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
                             </div>
                         </div>
+                        {% if user == post.author %}
+                            <button id="edit">Edit</button>
+                        {% endif %}
                     </div>
 
 
