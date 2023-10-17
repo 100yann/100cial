@@ -25,6 +25,8 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField(max_length=400)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+
 
     def __str__(self) -> str:
         return ", ".join(f"{key}: {value}" for key, value in vars(self).items())
@@ -47,5 +49,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ["text"]
         widgets = {
-            'text': forms.TextInput(attrs={'class': 'form-control'})
+            'text': forms.TextInput(attrs={'class': 'form-control', 'id': 'comment-value'})
         }

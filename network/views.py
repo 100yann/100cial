@@ -16,9 +16,12 @@ def index(request):
             new_post = form.cleaned_data['post']
             user = User.objects.get(id=request.user.id)
             Post.objects.create(author=user, post=new_post)
+
     context = {
         'create_post': PostForm,
-        'posts': Post.objects.all()
+        'posts': Post.objects.all(),
+        'add_comment': CommentForm,
+        'all_comments': Comment.objects.all().order_by("-timestamp")
     }
     return render(request, "network/index.html", context)
 
@@ -106,3 +109,24 @@ def like_post(request, id):
             'message': message,
             'found': liked
         })
+
+
+def add_comment(request, id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        comment = data.get('comment')
+        post = Post.objects.get(pk=id)
+        user = User.objects.get(pk=request.user.id)
+        new_comment = Comment(post=post, text=comment, user=user)
+        new_comment.save()
+        print(new_comment.timestamp)
+        context = {
+            'message': 'Comment added successfully!',
+            'new_comment': {
+                'id': new_comment.id,
+                'text': new_comment.text,
+                'user': new_comment.user.username,
+                'timestamp': new_comment.timestamp
+            }
+        }
+        return JsonResponse(context)
