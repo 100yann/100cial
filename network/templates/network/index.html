@@ -12,7 +12,7 @@
         <div class="posts">
             {% for post in posts %}
                 <div class="single-post">
-                    {{ post.author }}
+                    <a href="{% url 'user' id=post.author.id %}">{{ post.author }}</a>
                     <div id="post-text">{{post.post}}</div>
                     {{ post.timestamp }}
                     <div class="interactions">

@@ -143,3 +143,42 @@ def edit_post(request, id):
         else:
             return JsonResponse({'message': 'Not authenticated'},status=401)
     return JsonResponse({'message': 'Not authenticated'}, status=401)
+
+
+def user_profile(request, id):
+    active_user = User.objects.get(pk=request.user.id)
+    user = User.objects.get(pk=id)
+    if active_user != user:
+        if active_user.following.filter(id=id).exists():
+            status = 'Follow'
+        else:
+            status = 'Unfollow'
+
+    if request.method == 'PUT':
+        if status == 'Follow':
+            active_user.unfollow(user)
+        else:
+            active_user.follow(user)
+        return JsonResponse({'message': status})
+     
+    user = User.objects.get(pk=id)
+    posts = Post.objects.filter(author=user).order_by('-timestamp')
+    comments = Comment.objects.filter(post__in=posts)
+
+
+    context = {
+        'profile': user,
+        'posts': posts,
+        'all_comments': comments,
+        'create_post': PostForm,
+        'add_comment': CommentForm,
+    }
+
+    try:
+        context['follows'] = status
+    except UnboundLocalError:
+        pass
+    
+    return render(request, 'network/user_profile.html', context)
+
+

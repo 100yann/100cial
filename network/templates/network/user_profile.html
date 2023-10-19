@@ -1,0 +1,71 @@
+{% extends 'network/layout.html' %}
+
+
+{% block body %}
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1>{{ profile }}</h1>
+            {% if user.id != profile.id %}
+                {% if follows == 'Follow' %}
+                    <button data-profile-id='{{ profile.id }}' id="follow">Unfollow</button>
+                {% else %}
+                    <button data-profile-id='{{ profile.id }}' id="follow">Follow</button>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-lg-8">
+            <div class="form">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ create_post }}
+                    <input type="submit" class='btn btn-sm btn-primary' name="new_post" value="Post">
+                </form>
+            </div>
+            <div class="posts">
+                {% for post in posts %}
+                    <div class="single-post">
+                        {{ post.author }}
+                        <div id="post-text">{{post.post}}</div>
+                        {{ post.timestamp }}
+                        <div class="interactions">
+                            <div id="likes">
+                                {% if user.is_authenticated %}
+                                <button id='like' data-post-id="{{ post.id }}" class="btn btn-sm btn-primary"></button>
+                                {% endif %}
+                                <span id="num-likes">{{ post.likes_count }}</span>
+                            </div>
+                            <div id="comments">
+                                <button id="comment" class="btn btn-sm btn-primary">Comments</button>
+                                <div id="add-comment">
+                                    <div id="show-comments">
+                                        {% for comment in all_comments %}
+                                            {% if comment.post_id == post.id %}
+                                                <div>
+                                                    <ul>
+                                                        <li>{{ comment.user }}</li>
+                                                        <li>{{ comment.text }}</li>
+                                                        <li>{{ comment.timestamp }}</li>
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {{ add_comment }}
+                                    <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
+                                </div>
+                            </div>
+                            {% if user == post.author %}
+                                <button id="edit">Edit</button>
+                            {% endif %}
+                        </div>
+            
+            
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

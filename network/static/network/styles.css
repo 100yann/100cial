@@ -6,3 +6,7 @@ ul {
 #add-comment {
     display: none;
 }
+
+.container {
+    margin: 20px;
+}

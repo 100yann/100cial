@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
     editButtons.forEach((element) =>{
         const elementParent = element.parentElement.parentElement
         element.onclick = () => editPost(elementParent, headers)
-    })   
+    })  
     })
 })
 
@@ -149,3 +149,5 @@ function editPost(element, headers){
         })
     }
 }
+
+

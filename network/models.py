@@ -4,8 +4,13 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    following = models.ManyToManyField('self', related_name='followers', blank=True)
 
+    def follow(self, follow_user):
+        self.following.add(follow_user)
+
+    def unfollow(self, unfollow_user):
+        self.following.remove(unfollow_user)
 
 # Model to store all posts
 class Post(models.Model):
@@ -19,7 +24,7 @@ class Post(models.Model):
 
     def likes_count(self) -> int:
         return self.likes.all().count()
-    
+        
 
 # Model to store all comments
 class Comment(models.Model):
