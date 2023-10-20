@@ -182,3 +182,15 @@ def user_profile(request, id):
     return render(request, 'network/user_profile.html', context)
 
 
+def following_page(request):
+    following = User.objects.get(pk=request.user.id).following
+    posts = Post.objects.filter(author__in=following.all()).order_by('-timestamp')
+    comments = Comment.objects.filter(post__in=posts)
+
+    context = {
+        'posts': posts,
+        'all_comments': comments,
+        'add_comment': CommentForm,
+
+    }
+    return render(request, 'network/following_page.html', context)

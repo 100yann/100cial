@@ -16,14 +16,15 @@
             {% endif %}
         </div>
         <div class="col-lg-8">
-            <div class="form">
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ create_post }}
-                    <input type="submit" class='btn btn-sm btn-primary' name="new_post" value="Post">
-                </form>
-            </div>
             <div class="posts">
+                <div class="form">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ create_post }}
+                        <input type="submit" class='btn btn-sm btn-primary' name="new_post" value="Post">
+                    </form>
+                </div>
+
                 {% for post in posts %}
                     <div class="single-post">
                         {{ post.author }}
