@@ -8,5 +8,50 @@ ul {
 }
 
 .container {
-    margin: 20px;
+    margin: 30px auto;
+}
+
+.form {
+    margin-bottom: 20px;
+}
+.form form .form-control{
+    border-radius: 25px;
+    height: 150px;
+    margin-bottom: 15px;
+}
+
+.home {
+    margin: auto;
+    max-width: 60%;
+}
+
+.single-post {
+    background-color: bisque;
+    border-radius: 25px;
+    padding: 7px 15px 15px;
+    margin-bottom: 10px;
+}
+.single-post .post-heading{
+    display: flex;
+    justify-content: space-between;
+}
+.post-heading #author{
+    font-size: 24px;
+    font-weight: 500;
+}
+.post-heading p{
+    font-size: 14px;
+    color: rgb(115, 115, 115);
+    line-height:36px;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+
+}
+
+.interactions {
+    display: flex;
+}
+.interactions #num-likes {
+    margin-right: 10px;
 }

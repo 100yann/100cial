@@ -7,10 +7,12 @@ class User(AbstractUser):
     following = models.ManyToManyField('self', related_name='followers', blank=True)
 
     def follow(self, follow_user):
-        self.following.add(follow_user)
+        if follow_user != self:
+            self.following.add(follow_user)
 
     def unfollow(self, unfollow_user):
         self.following.remove(unfollow_user)
+
 
 # Model to store all posts
 class Post(models.Model):
