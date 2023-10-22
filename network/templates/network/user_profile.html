@@ -3,7 +3,7 @@
 
 {% block body %}
 {% csrf_token %}
-<div class="container">
+<div class="container" id="default-view">
     <div class="row">
         <div class="col-lg-4">
             <h1>{{ profile }}</h1>
@@ -13,7 +13,12 @@
                 {% else %}
                     <button data-profile-id='{{ profile.id }}' id="follow">Follow</button>
                 {% endif %}
+            {% else %}
+                <button data-profile-id='{{ profile.id }}' id="edit-profile">Edit Details</button>
             {% endif %}
+            <ul>
+                <li>Email: {{ profile.email }}</li>
+            </ul>
         </div>
         <div class="col-lg-8">
             <div class="form">
@@ -27,4 +32,15 @@
         </div>
     </div>
 </div>
+<div class="container" id="edit-view">
+    <h1>{{ profile }}</h1>
+    <div id="details-row">
+        {{ user_details.birthday }}
+        {{ user_details.nationality }}
+        {{ user_details.profile_pic }}
+    </div> 
+        {{ user_details.description }}
+        <button id="save-details">Save</button>
+</div>
 {% endblock %}
+

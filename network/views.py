@@ -6,7 +6,7 @@ from django.urls import reverse
 
 import json
 
-from .models import User, Post, PostForm, Comment, CommentForm
+from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
 
 
 def index(request):
@@ -172,6 +172,7 @@ def user_profile(request, id):
         'all_comments': comments,
         'create_post': PostForm,
         'add_comment': CommentForm,
+        'user_details': UserDetails
     }
 
     try:

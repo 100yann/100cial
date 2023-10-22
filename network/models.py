@@ -1,10 +1,14 @@
 from typing import Any
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django_countries.fields import CountryField
 
 class User(AbstractUser):
     following = models.ManyToManyField('self', related_name='followers', blank=True)
+    birthday = models.DateField(blank=True, null=True)
+    nationality = CountryField(null=True)
+    profile_pic = models.ImageField(upload_to="profile_pics", null=True)
+    description = models.TextField(max_length=600, null=True)
 
     def follow(self, follow_user):
         if follow_user != self:
@@ -73,3 +77,23 @@ class CommentForm(forms.ModelForm):
         labels = {
             'text': ''
         }
+
+class MyDateInput(forms.widgets.DateInput):
+    input_type = 'date'
+
+
+class UserDetails(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["birthday", "nationality", "profile_pic", "description"]
+
+        widgets = {
+            'birthday': forms.DateInput(attrs=dict(type='date'))
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        super(UserDetails, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['id'] = f'details-{visible.name}'
