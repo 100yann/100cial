@@ -1,7 +1,4 @@
-ul {
-    list-style-type: none;
-    padding-left: 0;
-}
+
 
 #add-comment {
     display: none;
@@ -25,17 +22,23 @@ ul {
     max-width: 60%;
 }
 
-.single-post {
+.single-post{
     background-color: bisque;
     border-radius: 25px;
-    padding: 7px 15px 15px;
+    padding: 8px 20px 15px;
     margin-bottom: 10px;
 }
-.single-post .post-heading{
+.post-contents .post-heading{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 12px;
 }
-.post-heading #author{
+
+#post-text{
+    margin-bottom: 12px;
+}
+
+#author{
     font-size: 24px;
     font-weight: 500;
 }
@@ -51,7 +54,20 @@ ul {
 
 .interactions {
     display: flex;
+    justify-content: space-between;
 }
-.interactions #num-likes {
-    margin-right: 10px;
+
+
+
+.new-comment {
+    margin-bottom: 25px;
+}
+
+
+#comment-value {
+    height: 75px;
+}
+
+#show-comments{
+    margin-top: 15px;
 }

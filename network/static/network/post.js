@@ -59,12 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     commentButtons.forEach((element) => {
         let is_clicked = false
+
         element.onclick = () => {
-            const elementParent = element.parentElement
+            const elementParent = element.parentElement.parentElement.parentElement.parentElement
+
             const commentField = elementParent.querySelector('#add-comment')
+            const postContents = elementParent.querySelector('.post-contents')
             if (is_clicked){
                 commentField.style.display = 'none'
                 is_clicked = false
+
             } else {
                 commentField.style.display = 'block'
                 is_clicked = true
@@ -92,15 +96,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         const username = data.new_comment['user']
                         const timestamp = data.new_comment['timestamp']
 
-                        const showComments = submitComment.parentElement;
+                        const showComments = submitComment.parentElement.parentElement.querySelector('#show-comments');
                         let div = document.createElement('div');
                         div.innerHTML = `
-                            <ul>
-                                <li>${username}</li>
-                                <li>${commentValue}</li>
-                                <li>${timestamp}</li>
-                            </ul>
+                            <div class="post-heading">
+                                <h5><a href="{% url 'user' id=comment.user.id %}">${username}</a></h5>
+                            <p>${timestamp}</p>
+                            </div>
+                            <p>${commentValue}</p>
+                            <hr>
                             `
+
                         showComments.insertBefore(div, showComments.firstChild);
                         elementParent.querySelector('#comment-value').value = ''
                     })

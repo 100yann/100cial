@@ -48,7 +48,11 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ["post"]
         widgets = {
-            'post': forms.TextInput(attrs={'class': 'form-control', 'id': 'post-text'})
+            'post': forms.Textarea(attrs={
+                                        'cols': 80, 
+                                        'rows': 20,
+                                        'class': 'form-control',
+                                        'id': 'post-text'})
         }
 
 
@@ -57,5 +61,9 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ["text"]
         widgets = {
-            'text': forms.TextInput(attrs={'class': 'form-control', 'id': 'comment-value'})
+            'text': forms.Textarea(attrs={
+                                        'cols': 80, 
+                                        'rows': 20,
+                                        'class': 'form-control', 
+                                        'id': 'comment-value'})
         }
