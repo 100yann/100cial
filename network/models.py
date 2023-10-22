@@ -54,6 +54,9 @@ class PostForm(forms.ModelForm):
                                         'class': 'form-control',
                                         'id': 'post-text'})
         }
+        labels = {
+            'post': ''
+        }
 
 
 class CommentForm(forms.ModelForm):
@@ -66,4 +69,7 @@ class CommentForm(forms.ModelForm):
                                         'rows': 20,
                                         'class': 'form-control', 
                                         'id': 'comment-value'})
+        }
+        labels = {
+            'text': ''
         }

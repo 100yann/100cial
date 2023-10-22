@@ -2,6 +2,9 @@
 
 {% block body %}
 {% csrf_token %}
-    
 
+<div class="container">
+    {% include "network/content.html" %}
+
+</div>
 {% endblock %}

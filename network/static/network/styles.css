@@ -22,6 +22,10 @@
     max-width: 60%;
 }
 
+.posts {
+    margin: auto;
+    max-width: 60%;
+}
 .single-post{
     background-color: bisque;
     border-radius: 25px;
@@ -36,6 +40,8 @@
 
 #post-text{
     margin-bottom: 12px;
+    text-wrap: wrap;
+    word-wrap: break-word;
 }
 
 #author{
