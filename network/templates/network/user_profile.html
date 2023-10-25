@@ -5,24 +5,28 @@
 {% csrf_token %}
 <div class="container" id="default-view">
     <div class="row">
-        <div class="col-lg-4">
-            <img src="/media/{{ profile.profile_pic }}" alt="">
-            <h1>{{ profile }}</h1>
+        <div class="col-lg-3 profile">
+            <div id="profile-heading">
+                <h1>{{ profile }}</h1>
+                <span id="user-description">{{ profile.description }}</span>
+            </div>
+
+                <div id="profile-details">
+                    <i class="fa-solid fa-envelope-open-text fa-lg mr-2"></i>{{ profile.email }}
+                    <span id="user-birthday"><i class="fa-solid fa-cake-candles fa-lg mr-2"></i>{{ profile.birthday }}</span>
+                    <span id="user-nationality"><i class="fa-solid fa-earth-europe fa-lg mr-2"></i>{{ profile.nationality.name }}</span>
+                    <span id="user-followers">Followers: {{ profile.followed_by }}</span>
+                </div>
+
             {% if user.id != profile.id %}
-                {% if follows == 'Follow' %}
-                    <button data-profile-id='{{ profile.id }}' id="follow">Unfollow</button>
+            {% if follows == 'Follow' %}
+                    <button class='btn btn-primary' data-profile-id='{{ profile.id }}' id="follow">Unfollow</button>
                 {% else %}
-                    <button data-profile-id='{{ profile.id }}' id="follow">Follow</button>
+                    <button class='btn btn-primary' data-profile-id='{{ profile.id }}' id="follow">Follow</button>
                 {% endif %}
             {% else %}
-                <button data-profile-id='{{ profile.id }}' id="edit-profile">Edit Details</button>
+                <button class='btn btn-primary' data-profile-id='{{ profile.id }}' id="edit-profile">Edit Details</button>
             {% endif %}
-            <ul>
-                <li>Email: {{ profile.email }}</li>
-                <span id="user-birthday"><li>Birthday: {{ profile.birthday }}</li></span>
-                <span id="user-nationality"><li>Nationality: {{ profile.nationality.name }}</li></span>
-                <span id="user-description"><li>Description: {{ profile.description }}</li></span>
-            </ul>
         </div>
         <div class="col-lg-8">
             <div class="form">
