@@ -9,6 +9,7 @@ class User(AbstractUser):
     nationality = CountryField(null=True)
     profile_pic = models.ImageField(upload_to="profile_pics", null=True, blank=True)
     description = models.TextField(max_length=600, null=True)
+    followed_by = models.IntegerField(blank=True, null=True, default=0)
 
     def follow(self, follow_user):
         if follow_user != self:
@@ -56,7 +57,7 @@ class PostForm(forms.ModelForm):
                                         'cols': 80, 
                                         'rows': 20,
                                         'class': 'form-control',
-                                        'id': 'post-text'})
+                                        'id': 'new-post'})
         }
         labels = {
             'post': ''

@@ -1,7 +1,44 @@
+body {
+    background-color: #06141d;
+    color: white;
+}
 ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
+}
+.profile span{
+    display: block;
+}
+
+#profile-heading {
+    margin: 10px 0 20px;
+}
+#profile-details {
+    text-align: left;
+}
+
+#follow, #edit-profile {
+    margin: 20px;
+}
+a:any-link {
+    color: white;
+}
+
+.btn-primary {
+    padding: 5px 25px;
+    background-color: #28343e;
+    border: none;
+}
+.profile {
+    background-color: #1b2730;
+    border-radius: 25px;
+    margin-right: 20px;
+    text-align: center;
+    height: fit-content;
+}
+#new-post {
+    background-color: #28343e;
 }
 
 #add-comment {
@@ -31,7 +68,7 @@ ul {
     max-width: 60%;
 }
 .single-post{
-    background-color: bisque;
+    background-color: #1b2730;
     border-radius: 25px;
     padding: 8px 20px 15px;
     margin-bottom: 10px;
@@ -54,7 +91,7 @@ ul {
 }
 .post-heading p{
     font-size: 14px;
-    color: rgb(115, 115, 115);
+    color: #62707e;
     line-height:36px;
     padding: 0;
     margin: 0;

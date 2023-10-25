@@ -95,12 +95,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log(data.message)
                         const username = data.new_comment['user']
                         const timestamp = data.new_comment['timestamp']
+                        const userId = data.new_comment['userId']
 
                         const showComments = submitComment.parentElement.parentElement.querySelector('#show-comments');
                         let div = document.createElement('div');
                         div.innerHTML = `
                             <div class="post-heading">
-                                <h5><a href="{% url 'user' id=comment.user.id %}">${username}</a></h5>
+                                <h5><a href="/user/${userId}">${username}</a></h5>
                             <p>${timestamp}</p>
                             </div>
                             <p>${commentValue}</p>

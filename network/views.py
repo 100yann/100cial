@@ -132,7 +132,8 @@ def add_comment(request, id):
                 'id': new_comment.id,
                 'text': new_comment.text,
                 'user': new_comment.user.username,
-                'timestamp': new_comment.timestamp
+                'timestamp': new_comment.timestamp,
+                'userId': user.id
             }
         }
         return JsonResponse(context)
@@ -155,7 +156,6 @@ def edit_post(request, id):
 def user_profile(request, id):
     active_user = User.objects.get(pk=request.user.id)
     user = User.objects.get(pk=id)
-
     if active_user != user:
         if active_user.following.filter(id=id).exists():
             status = 'Follow'
@@ -165,9 +165,16 @@ def user_profile(request, id):
         if request.method == 'PUT':
             if status == 'Follow':
                 active_user.unfollow(user)
+                user.followed_by = user.followed_by - 1
             else:
                 active_user.follow(user)
-            return JsonResponse({'message': status})
+                user.followed_by = user.followed_by + 1
+
+            user.save()
+            return JsonResponse({
+                'message': status, 
+                'num_followers': user.followed_by
+                })
 
     else:
             if request.method == 'PUT':
