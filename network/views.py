@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-
+import os
 import json
 
 from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
@@ -148,23 +148,45 @@ def edit_post(request, id):
 def user_profile(request, id):
     active_user = User.objects.get(pk=request.user.id)
     user = User.objects.get(pk=id)
+
     if active_user != user:
         if active_user.following.filter(id=id).exists():
             status = 'Follow'
         else:
             status = 'Unfollow'
 
-    if request.method == 'PUT':
-        if status == 'Follow':
-            active_user.unfollow(user)
-        else:
-            active_user.follow(user)
-        return JsonResponse({'message': status})
-     
-    user = User.objects.get(pk=id)
+        if request.method == 'PUT':
+            if status == 'Follow':
+                active_user.unfollow(user)
+            else:
+                active_user.follow(user)
+            return JsonResponse({'message': status})
+
+    else:
+            if request.method == 'PUT':
+                message = {}
+                data = json.loads(request.body)
+                new_birthday = data['newBirthday']
+                new_nationality = data['newNationality']
+                new_description = data['newDescription']
+                new_image = request.FILES.get('newImage')
+                print(new_description)
+                if new_birthday:
+                    user.birthday = new_birthday
+                    message['newBirthday'] = True
+                if new_nationality:
+                    user.nationality = new_nationality
+                    message['newNationality'] = user.nationality.name
+                if new_description:
+                    user.description = new_description
+                    message['newDescription'] = True
+                if new_image:
+                    user.profile_pic = new_image
+
+                user.save()
+                return JsonResponse(message)
     posts = Post.objects.filter(author=user).order_by('-timestamp')
     comments = Comment.objects.filter(post__in=posts)
-
 
     context = {
         'profile': user,

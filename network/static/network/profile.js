@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function(){
     const editButton = document.querySelector('#edit-profile')
     const saveButton = document.querySelector("#save-details")
 
+
+
     let isDefault = true
     const userId = editButton.getAttribute('data-profile-id')
     editButton.onclick = () => {
@@ -9,20 +11,20 @@ document.addEventListener('DOMContentLoaded', function(){
         isDefault = false
     }
     saveButton.onclick = () => {
-        const currDetails = {
-            'currBirthday': document.querySelector('#details-birthday'),
-            'currNationality': document.querySelector('#details-nationality'),
-            'currDescription': document.querySelector('#details-description')
-        }
-        editProfile(userId, isDefault, currDetails)
+        editProfile(userId, isDefault)
         isDefault = true
     }
 })
 
 
-function editProfile(userId, isDefault, currDetails=null){
+function editProfile(userId, isDefault){
     const defaultPageDisplay = document.querySelector('#default-view')
     const editDisplay = document.querySelector('#edit-view')
+
+    const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;    
+    const headers = {
+        'X-CSRFToken': csrfToken,
+    };
 
     if (isDefault){
         defaultPageDisplay.style.display = 'none'
@@ -33,10 +35,40 @@ function editProfile(userId, isDefault, currDetails=null){
         editDisplay.style.display = 'none'
     }
 
-    if (currDetails){
-        for (element in currDetails){
-            console.log(currDetails[element])
+
+    const newBirthday = document.querySelector('#new-birthday').value
+    const newNationality = document.querySelector('#new-nationality').value
+    const newDescription = document.querySelector('#new-description').value
+
+    fetch(`${userId}`, {
+        method: 'PUT',
+        headers: {
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+            newBirthday: newBirthday,
+            newNationality: newNationality,
+            newDescription: newDescription
+        })
+    })
+    .then(response => {
+        if (response.ok){
+            return response.json()
         }
-    }
-    
+    })
+    .then(data => {
+        if (data.hasOwnProperty('newBirthday')){
+            const currBirthday = document.querySelector('#user-birthday')
+            currBirthday.textContent = newBirthday
+        }
+        if (data.hasOwnProperty('newDescription')){
+            const currDescription = document.querySelector('#user-description')
+            currDescription.textContent = newDescription    
+        }
+        if (data.hasOwnProperty('newNationality')){
+            const currNationality = document.querySelector('#user-nationality')
+            currNationality.textContent = data['newNationality']
+        }
+    })
+  
 }

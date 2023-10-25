@@ -6,6 +6,7 @@
 <div class="container" id="default-view">
     <div class="row">
         <div class="col-lg-4">
+            <img src="/media/{{ profile.profile_pic }}" alt="">
             <h1>{{ profile }}</h1>
             {% if user.id != profile.id %}
                 {% if follows == 'Follow' %}
@@ -18,6 +19,9 @@
             {% endif %}
             <ul>
                 <li>Email: {{ profile.email }}</li>
+                <span id="user-birthday"><li>Birthday: {{ profile.birthday }}</li></span>
+                <span id="user-nationality"><li>Nationality: {{ profile.nationality.name }}</li></span>
+                <span id="user-description"><li>Description: {{ profile.description }}</li></span>
             </ul>
         </div>
         <div class="col-lg-8">
@@ -34,13 +38,13 @@
 </div>
 <div class="container" id="edit-view">
     <h1>{{ profile }}</h1>
-    <div id="details-row">
-        {{ user_details.birthday }}
-        {{ user_details.nationality }}
-        {{ user_details.profile_pic }}
-    </div> 
-        {{ user_details.description }}
-        <button id="save-details">Save</button>
+        <div id="details-row">
+            {{ user_details.birthday }}
+            {{ user_details.nationality }}
+            {{ user_details.profile_pic }}
+        </div> 
+            {{ user_details.description }}
+            <button id="save-details">Save</button>
 </div>
 {% endblock %}
 

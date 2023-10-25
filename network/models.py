@@ -7,7 +7,7 @@ class User(AbstractUser):
     following = models.ManyToManyField('self', related_name='followers', blank=True)
     birthday = models.DateField(blank=True, null=True)
     nationality = CountryField(null=True)
-    profile_pic = models.ImageField(upload_to="profile_pics", null=True)
+    profile_pic = models.ImageField(upload_to="profile_pics", null=True, blank=True)
     description = models.TextField(max_length=600, null=True)
 
     def follow(self, follow_user):
@@ -92,8 +92,13 @@ class UserDetails(forms.ModelForm):
         }
 
 
+
     def __init__(self, *args, **kwargs):
         super(UserDetails, self).__init__(*args, **kwargs)
+        self.fields['profile_pic'].widget.attrs.update({
+            'name': 'newImage',
+            'accept': 'image/*',
+        })
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
-            visible.field.widget.attrs['id'] = f'details-{visible.name}'
+            visible.field.widget.attrs['id'] = f'new-{visible.name}'
