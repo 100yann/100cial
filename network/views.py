@@ -3,10 +3,11 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-import os
 import json
 
 from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
+from django.core.paginator import Paginator
+
 
 
 def index(request):
@@ -16,10 +17,16 @@ def index(request):
             new_post = form.cleaned_data['post']
             user = User.objects.get(id=request.user.id)
             Post.objects.create(author=user, post=new_post)
+    post_list = Post.objects.all().order_by('-timestamp')
+    
+    # Set up Pagination
+    p = Paginator(post_list, 10)
+    page = request.GET.get('page')
+    posts = p.get_page(page)
 
     context = {
         'create_post': PostForm,
-        'posts': Post.objects.all().order_by('-timestamp'),
+        'posts': posts,
         'add_comment': CommentForm,
         'all_comments': Comment.objects.all().order_by("-timestamp")
     }
@@ -185,8 +192,15 @@ def user_profile(request, id):
 
                 user.save()
                 return JsonResponse(message)
-    posts = Post.objects.filter(author=user).order_by('-timestamp')
-    comments = Comment.objects.filter(post__in=posts)
+            
+    post_list = Post.objects.filter(author=user).order_by('-timestamp')
+    comments = Comment.objects.filter(post__in=post_list)
+
+    
+    # Set up Pagination
+    p = Paginator(post_list, 10)
+    page = request.GET.get('page')
+    posts = p.get_page(page)
 
     context = {
         'profile': user,
@@ -207,9 +221,15 @@ def user_profile(request, id):
 
 def following_page(request):
     following = User.objects.get(pk=request.user.id).following
-    posts = Post.objects.filter(author__in=following.all()).order_by('-timestamp')
-    comments = Comment.objects.filter(post__in=posts)
 
+    post_list = Post.objects.filter(author__in=following.all()).order_by('-timestamp')
+    comments = Comment.objects.filter(post__in=post_list)
+
+    
+    # Set up Pagination
+    p = Paginator(post_list, 10)
+    page = request.GET.get('page')
+    posts = p.get_page(page)
     context = {
         'posts': posts,
         'all_comments': comments,
