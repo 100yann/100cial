@@ -25,10 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.found === true){
                 userLiked = true
-                element.textContent = 'Unlike'
+                element.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>'
             } else {
                 userLiked = false
-                element.textContent = 'Like'
+                element.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>'
             }
         }).catch(error => {
             console.error('Error:', error)
@@ -43,10 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.found === true){
                     currentLikes.textContent = parseInt(currentLikes.textContent) + 1
-                    element.textContent = 'Unlike'
+                    element.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>'
                 } else {
                     currentLikes.textContent = parseInt(currentLikes.textContent) - 1
-                    element.textContent = 'Like'
+                    element.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>'
                 }
             })
             .catch(error => {

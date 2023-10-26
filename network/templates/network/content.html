@@ -16,7 +16,7 @@
                     <span id="num-likes">{{ post.likes_count }}</span>
                 </div>
                 <div id="comments">
-                    <button id="comment" class="btn btn-sm btn-primary">Comments</button>
+                    <button id="comment" class="btn btn-sm btn-primary"><i class="fa-regular fa-comments fa-lg"></i></button>
                 </div>
                 {% if user == post.author %}
                     <button id="edit">Edit</button>
@@ -24,6 +24,7 @@
             </div>
             <div id="add-comment">
                 <div class="new-comment">
+                    <h6>Add a comment:</h6>
                     {{ add_comment }}
                     <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
                 </div>
