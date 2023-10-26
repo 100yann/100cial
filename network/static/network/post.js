@@ -25,10 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.found === true){
                 userLiked = true
-                element.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>'
+                element.innerHTML = '<i class="fa-solid fa-heart fa-lg button-liked"></i>'
+                currentLikes.classList.add('button-liked')
             } else {
                 userLiked = false
                 element.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>'
+                currentLikes.classList.remove('button-liked')
+
             }
         }).catch(error => {
             console.error('Error:', error)
@@ -42,11 +45,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.found === true){
+                    if (currentLikes.textContent === '0'){
+                        currentLikes.removeAttribute("hidden")
+                    }
                     currentLikes.textContent = parseInt(currentLikes.textContent) + 1
-                    element.innerHTML = '<i class="fa-solid fa-heart fa-lg"></i>'
+                    currentLikes.classList.add('button-liked')
+                    element.innerHTML = '<i class="fa-solid fa-heart fa-lg button-liked"></i>'
                 } else {
                     currentLikes.textContent = parseInt(currentLikes.textContent) - 1
+                    currentLikes.classList.remove('button-liked')
                     element.innerHTML = '<i class="fa-regular fa-heart fa-lg"></i>'
+                    if (currentLikes.textContent === '0'){
+                        currentLikes.setAttribute('hidden', true)
+                    }
                 }
             })
             .catch(error => {

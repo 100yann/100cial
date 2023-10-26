@@ -11,18 +11,23 @@
             <div class="interactions">
                 <div id="likes">
                     {% if user.is_authenticated %}
-                    <button id='like' data-post-id="{{ post.id }}" class="btn btn-sm btn-primary"></button>
+                    <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
                     {% endif %}
-                    <span id="num-likes">{{ post.likes_count }}</span>
+                    {% if post.likes_count > 0 %}
+                        <span id="num-likes">{{ post.likes_count }}</span>
+                    {% else %}
+                        <span id="num-likes" hidden>{{ post.likes_count }}</span>
+                    {% endif %}
                 </div>
                 <div id="comments">
-                    <button id="comment" class="btn btn-sm btn-primary"><i class="fa-regular fa-comments fa-lg"></i></button>
+                    <button id="comment" class="interaction"><i class="fa-regular fa-comments fa-lg"></i></button>
                 </div>
                 {% if user == post.author %}
                     <button id="edit">Edit</button>
                 {% endif %}
             </div>
             <div id="add-comment">
+                <hr>
                 <div class="new-comment">
                     <h6>Add a comment:</h6>
                     {{ add_comment }}
