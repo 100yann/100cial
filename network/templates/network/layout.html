@@ -14,23 +14,27 @@
     </head>
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="{% url 'index' %}">Network</a>
           
-            <div>
-              <ul class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse">
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'user' id=user.id %}"><strong>{{ user.username }}</strong></a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
+                    <a class="nav-link" href="{% url 'index' %}">All Posts</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'following' %}">Following</a>
                     </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav mr-right mt-2 mt-lg-0">
+               {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
@@ -42,7 +46,7 @@
                         <a class="nav-link" href="{% url 'register' %}">Register</a>
                     </li>
                 {% endif %}
-              </ul>
+            </ul>
             </div>
           </nav>
         <div class="body">
