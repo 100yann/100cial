@@ -7,7 +7,7 @@ class User(AbstractUser):
     following = models.ManyToManyField('self', related_name='followers', blank=True)
     birthday = models.DateField(blank=True, null=True)
     nationality = CountryField(null=True)
-    profile_pic = models.ImageField(upload_to="profile_pics", null=True, blank=True)
+    profile_pic = models.ImageField(upload_to="profile_pics", default='profile_pics/default.png')
     description = models.TextField(max_length=600, null=True)
     followed_by = models.IntegerField(blank=True, null=True, default=0)
 

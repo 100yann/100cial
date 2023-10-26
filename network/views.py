@@ -215,9 +215,7 @@ def user_profile(request, id):
                     new_file.write(chunk)
 
             user.profile_pic = 'profile_pics/' + new_file_name
-            print(user.profile_pic.url)
             message['newImage'] = user.profile_pic.url
-            print(message['newImage'])
 
         user.save()
         return JsonResponse(message)
