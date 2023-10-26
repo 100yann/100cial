@@ -89,9 +89,10 @@ class UserDetails(forms.ModelForm):
         fields = ["birthday", "nationality", "profile_pic", "description"]
 
         widgets = {
-            'birthday': forms.DateInput(attrs=dict(type='date'))
+            'birthday': forms.DateInput(attrs=dict(type='date')),
         }
 
+    description = forms.CharField(widget=forms.Textarea, required=False)
 
 
     def __init__(self, *args, **kwargs):
@@ -100,6 +101,7 @@ class UserDetails(forms.ModelForm):
             'name': 'newImage',
             'accept': 'image/*',
         })
+
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
             visible.field.widget.attrs['id'] = f'new-{visible.name}'

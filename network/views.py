@@ -4,9 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 import json
-
+import os
 from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
 from django.core.paginator import Paginator
+from django.conf import settings
 
 
 
@@ -176,29 +177,50 @@ def user_profile(request, id):
                 'num_followers': user.followed_by
                 })
 
-    else:
-            if request.method == 'PUT':
-                message = {}
-                data = json.loads(request.body)
-                new_birthday = data['newBirthday']
-                new_nationality = data['newNationality']
-                new_description = data['newDescription']
-                new_image = request.FILES.get('newImage')
-                print(new_description)
-                if new_birthday:
-                    user.birthday = new_birthday
-                    message['newBirthday'] = True
-                if new_nationality:
-                    user.nationality = new_nationality
-                    message['newNationality'] = user.nationality.name
-                if new_description:
-                    user.description = new_description
-                    message['newDescription'] = True
-                if new_image:
-                    user.profile_pic = new_image
+    if request.method == 'POST':
+        message = {}
+        new_birthday = request.POST.get('birthday')
+        new_nationality = request.POST.get('country')
+        new_description = request.POST.get('description')
+        new_image = request.FILES.get('image')
 
-                user.save()
-                return JsonResponse(message)
+        if new_birthday:
+            user.birthday = new_birthday
+            message['newBirthday'] = True
+        if new_nationality:
+            user.nationality = new_nationality
+            message['newNationality'] = user.nationality.name
+        if new_description:
+            user.description = new_description
+            message['newDescription'] = True
+        if new_image:
+
+            # remove old profile pic
+            curr_profile_pic = user.profile_pic.url.replace('/media/', '')
+            media_root = settings.MEDIA_ROOT
+            cwd = os.getcwd()
+            path_to_pp = os.path.join(cwd, media_root, curr_profile_pic)
+            try:
+                os.remove(path_to_pp)
+            except FileNotFoundError:
+                pass
+
+            # save new profile pic
+            file_name, file_extension = os.path.splitext(new_image.name)
+            new_file_name = f"{user.username}_pp{file_extension}"
+            path_to_new_pp = os.path.join(media_root, 'profile_pics', new_file_name)
+            
+            with open(path_to_new_pp, 'wb') as new_file:
+                for chunk in new_image.chunks():
+                    new_file.write(chunk)
+
+            user.profile_pic = 'profile_pics/' + new_file_name
+            print(user.profile_pic.url)
+            message['newImage'] = user.profile_pic.url
+            print(message['newImage'])
+
+        user.save()
+        return JsonResponse(message)
             
     post_list = Post.objects.filter(author=user).order_by('-timestamp')
     comments = Comment.objects.filter(post__in=post_list)
@@ -222,7 +244,7 @@ def user_profile(request, id):
         context['follows'] = status
     except UnboundLocalError:
         pass
-    
+
     return render(request, 'network/user_profile.html', context)
 
 

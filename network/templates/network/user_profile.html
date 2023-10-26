@@ -7,6 +7,7 @@
     <div class="row">
         <div class="col-lg-3 profile">
             <div id="profile-heading">
+                <img id="user-profile-pic"src="{{ profile.profile_pic.url }}" alt="profile picture">
                 <h1>{{ profile }}</h1>
                 <span id="user-description">{{ profile.description }}</span>
             </div>
@@ -42,13 +43,17 @@
 </div>
 <div class="container" id="edit-view">
     <h1>{{ profile }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+
         <div id="details-row">
             {{ user_details.birthday }}
             {{ user_details.nationality }}
             {{ user_details.profile_pic }}
         </div> 
             {{ user_details.description }}
-            <button id="save-details">Save</button>
+            <input type="submit" id="save-details" value="Save">
+    </form>
 </div>
 {% endblock %}
 

@@ -37,6 +37,9 @@ a:any-link {
     text-align: center;
     height: fit-content;
 }
+#user-profile-pic{
+    margin-top: 10px;
+}
 #new-post {
     background-color: #28343e;
 }

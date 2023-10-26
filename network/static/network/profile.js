@@ -36,20 +36,23 @@ function editProfile(userId, isDefault){
     }
 
 
-    const newBirthday = document.querySelector('#new-birthday').value
-    const newNationality = document.querySelector('#new-nationality').value
-    const newDescription = document.querySelector('#new-description').value
+    const newBirthday = document.querySelector('#new-birthday')
+    const newNationality = document.querySelector('#new-nationality')
+    const newDescription = document.querySelector('#new-description')
+    const newImage = document.querySelector('#new-profile_pic')
+
+    const formData = new FormData()
+    formData.append('birthday', newBirthday.value)
+    formData.append('country', newNationality.value)
+    formData.append('description', newDescription.value)
+    formData.append('image', newImage.files[0])
 
     fetch(`${userId}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'X-CSRFToken': csrfToken,
         },
-        body: JSON.stringify({
-            newBirthday: newBirthday,
-            newNationality: newNationality,
-            newDescription: newDescription
-        })
+        body: formData
     })
     .then(response => {
         if (response.ok){
@@ -59,15 +62,23 @@ function editProfile(userId, isDefault){
     .then(data => {
         if (data.hasOwnProperty('newBirthday')){
             const currBirthday = document.querySelector('#user-birthday')
-            currBirthday.textContent = newBirthday
+            currBirthday.textContent = newBirthday.value
         }
         if (data.hasOwnProperty('newDescription')){
             const currDescription = document.querySelector('#user-description')
-            currDescription.textContent = newDescription    
+            currDescription.textContent = newDescription.value
         }
         if (data.hasOwnProperty('newNationality')){
             const currNationality = document.querySelector('#user-nationality')
             currNationality.textContent = data['newNationality']
+        }
+        if (data.hasOwnProperty('newImage')){
+            const currProfilePic = document.querySelector('#user-profile-pic')
+            let imagePath = data['newImage']
+            const cacheBuster = new Date().getTime();
+            imagePath = `${imagePath}?${cacheBuster}`;
+        
+            currProfilePic.src = imagePath;
         }
     })
   
