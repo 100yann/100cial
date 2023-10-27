@@ -11,13 +11,23 @@
                 <h1>{{ profile }}</h1>
                 <span id="user-description">{{ profile.description }}</span>
             </div>
-
-                <div id="profile-details">
-                    <i class="fa-solid fa-envelope-open-text fa-lg mr-2"></i>{{ profile.email }}
-                    <span id="user-birthday"><i class="fa-solid fa-cake-candles fa-lg mr-2"></i>{{ profile.birthday }}</span>
-                    <span id="user-nationality"><i class="fa-solid fa-earth-europe fa-lg mr-2"></i>{{ profile.nationality.name }}</span>
-                    <span id="user-followers">Followers: {{ profile.followed_by }}</span>
+            <hr>
+            <div id="profile-details">
+                <i class="fa-solid fa-envelope-open-text fa-lg mr-2"></i>{{ profile.email }}
+                <span id="user-birthday"><i class="fa-solid fa-cake-candles fa-lg mr-2"></i>{{ profile.birthday }}</span>
+                <span id="user-nationality"><i class="fa-solid fa-earth-europe fa-lg mr-2"></i>{{ profile.nationality.name }}</span>
+                <hr>
+                <div id="display-followers">
+                    <div>
+                        Followers
+                        <span id="user-followers"> {{ profile.followed_by }}</span>                        
+                    </div>
+                    <div>
+                        Following
+                        <span id="user-following">{{ profile.following.count }}</span>
+                    </div>   
                 </div>
+            </div>
 
             {% if user.id != profile.id %}
             {% if follows == 'Follow' %}

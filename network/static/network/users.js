@@ -31,7 +31,7 @@ function toggleFollowStatus(element, headers, profileId){
             const numFollowers = data['num_followers']
             element.textContent = status
             const updateFollowerCount = document.querySelector('#user-followers')
-            updateFollowerCount.textContent = `Followers: ${numFollowers}`
+            updateFollowerCount.textContent = `${numFollowers}`
             
         })
     }

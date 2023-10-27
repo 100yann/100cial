@@ -7,8 +7,15 @@ ul {
     padding: 0;
     margin: 0;
 }
+#search {
+    margin-right: 10px;
+}
 .navbar {
     background-color: #6AB07D;
+}
+.search-results{
+    display: none;
+    width: 100%;
 }
 .profile span{
     display: block;
@@ -63,8 +70,18 @@ a:any-link {
     text-align: center;
     height: fit-content;
 }
+.fa-cake-candles{
+    width: 20px;
+
+}
 #user-profile-pic{
     margin-top: 10px;
+}
+
+#display-followers{
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
 }
 #new-post {
     padding: 15px;

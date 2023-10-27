@@ -8,6 +8,7 @@ import os
 from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
 from django.core.paginator import Paginator
 from django.conf import settings
+from django.core import serializers
 
 
 
@@ -235,7 +236,7 @@ def user_profile(request, id):
         'all_comments': comments,
         'create_post': PostForm,
         'add_comment': CommentForm,
-        'user_details': UserDetails
+        'user_details': UserDetails,
     }
 
     try:
@@ -264,3 +265,17 @@ def following_page(request):
 
     }
     return render(request, 'network/following_page.html', context)
+
+
+def search(request, name):
+    matching_users = User.objects.all().filter(username__icontains=name)
+    results = []
+    for user in matching_users:
+        user_data = {
+            'username': user.username,
+            'profileId': user.pk,
+        }
+        results.append(user_data)
+    return JsonResponse({
+        'message': results
+    })
