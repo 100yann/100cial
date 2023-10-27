@@ -221,7 +221,7 @@ def user_profile(request, id):
         return JsonResponse(message)
             
     post_list = Post.objects.filter(author=user).order_by('-timestamp')
-    comments = Comment.objects.filter(post__in=post_list)
+    comments = Comment.objects.filter(post__in=post_list).order_by("-timestamp")
 
     
     # Set up Pagination
@@ -250,7 +250,7 @@ def following_page(request):
     following = User.objects.get(pk=request.user.id).following
 
     post_list = Post.objects.filter(author__in=following.all()).order_by('-timestamp')
-    comments = Comment.objects.filter(post__in=post_list)
+    comments = Comment.objects.filter(post__in=post_list).order_by("-timestamp")
 
     
     # Set up Pagination
