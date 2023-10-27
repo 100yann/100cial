@@ -1,8 +1,14 @@
 document.addEventListener('DOMContentLoaded', function(){
+    
+    // detect if user is not on "url/user"
+    const currUrl = window.location.href;
+    if (currUrl.indexOf('user') > -1 === false){
+        // if a user is on a differnt url, simply return the current function
+        return;
+    }
+
     const editButton = document.querySelector('#edit-profile')
     const saveButton = document.querySelector("#save-details")
-
-
 
     let isDefault = true
     const userId = editButton.getAttribute('data-profile-id')

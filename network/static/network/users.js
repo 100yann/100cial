@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', function(){
-
+    
     const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;    
     const headers = {
         'X-CSRFToken': csrfToken,
