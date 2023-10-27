@@ -44,7 +44,7 @@ a:any-link {
 .interaction:focus{
     outline: 0 !important; 
 }
-#like, #comment{
+#like, #comment, #edit{
     border: none;
     background-color: transparent;   
 }
@@ -131,6 +131,13 @@ a:any-link {
 
 .interactions {
     display: flex;
+    justify-content: space-between;
+}
+.interaction-left{
+    display: block;
+}
+.interaction-right{
+    display: block;
 }
 
 

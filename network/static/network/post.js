@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     const editButtons = document.querySelectorAll('#edit')
     editButtons.forEach((element) =>{
-        const elementParent = element.parentElement.parentElement
+        const elementParent = element.parentElement.parentElement.parentElement
+        console.log(elementParent)
         element.onclick = () => editPost(elementParent, headers)
     })  
     })
@@ -153,9 +154,7 @@ function editPost(element, headers){
     const saveButton = element.querySelector('#save-edit')
     saveButton.onclick = () => {
         const newText = textarea.value
-        element.querySelector('#post-text').innerHTML = `
-            ${newText}`
-        
+        element.querySelector('#post-text').innerHTML = `${newText}`
         element.querySelector('#edit').style.display = 'block'
 
         fetch(`/edit/${postId}`, {
