@@ -10,15 +10,20 @@ document.addEventListener('DOMContentLoaded', function(){
     const editButton = document.querySelector('#edit-profile')
     const saveButton = document.querySelector("#save-details")
 
-    let isDefault = true
-    const userId = editButton.getAttribute('data-profile-id')
-    editButton.onclick = () => {
-        editProfile(userId, isDefault)
-        isDefault = false
-    }
-    saveButton.onclick = () => {
-        editProfile(userId, isDefault)
-        isDefault = true
+    if (editButton){
+        let isDefault = true
+
+        const userId = editButton.getAttribute('data-profile-id')
+        editButton.onclick = (event) => {
+            event.preventDefault();
+            editProfile(userId, isDefault)
+            isDefault = false
+        }
+        saveButton.onclick = (event) => {
+            event.preventDefault();
+            editProfile(userId, isDefault)
+            isDefault = true
+        }     
     }
 })
 
@@ -28,9 +33,6 @@ function editProfile(userId, isDefault){
     const editDisplay = document.querySelector('#edit-view')
 
     const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;    
-    const headers = {
-        'X-CSRFToken': csrfToken,
-    };
 
     if (isDefault){
         defaultPageDisplay.style.display = 'none'
@@ -40,7 +42,6 @@ function editProfile(userId, isDefault){
         defaultPageDisplay.style.display = 'block'
         editDisplay.style.display = 'none'
     }
-
 
     const newBirthday = document.querySelector('#new-birthday')
     const newNationality = document.querySelector('#new-nationality')
@@ -68,7 +69,19 @@ function editProfile(userId, isDefault){
     .then(data => {
         if (data.hasOwnProperty('newBirthday')){
             const currBirthday = document.querySelector('#user-birthday')
-            currBirthday.textContent = newBirthday.value
+            const date = new Date(newBirthday.value);
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              ];
+
+            const year = date.getFullYear();
+            const month = date.getMonth(); // 0-based index
+            const day = date.getDate();
+
+            const formattedDate = `${monthNames[month]} ${day}, ${year}`;
+
+            currBirthday.innerHTML = `<i class="fa-solid fa-cake-candles fa-lg mr-2"></i>${formattedDate}`
         }
         if (data.hasOwnProperty('newDescription')){
             const currDescription = document.querySelector('#user-description')
@@ -76,7 +89,7 @@ function editProfile(userId, isDefault){
         }
         if (data.hasOwnProperty('newNationality')){
             const currNationality = document.querySelector('#user-nationality')
-            currNationality.textContent = data['newNationality']
+            currNationality.innerHTML = `<i class="fa-solid fa-earth-europe fa-lg mr-2"></i>${data['newNationality']}`
         }
         if (data.hasOwnProperty('newImage')){
             const currProfilePic = document.querySelector('#user-profile-pic')

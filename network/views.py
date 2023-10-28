@@ -1,14 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 import json
 import os
 from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
 from django.core.paginator import Paginator
 from django.conf import settings
-from django.core import serializers
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -119,7 +120,7 @@ def like_post(request, id):
             'found': liked
         })
 
-
+@login_required(login_url='index')
 def add_comment(request, id):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -140,9 +141,9 @@ def add_comment(request, id):
         }
         return JsonResponse(context)
     
-
+@login_required(login_url='/login')
 def edit_post(request, id):
-    if request.method == 'PUT':
+    if request.method == 'PUT' and request.user.is_authenticated:
         data = json.loads(request.body)
         new_text = data.get('newText')
         updated_post = Post.objects.get(pk=id)
@@ -152,15 +153,15 @@ def edit_post(request, id):
             return JsonResponse({'message': 'Post edited successfully'})
         else:
             return JsonResponse({'message': 'Not authenticated'},status=401)
-    return JsonResponse({'message': 'Not authenticated'}, status=401)
+    return redirect('index')
 
 
 def user_profile(request, id):
     user = User.objects.get(pk=id)
 
     if request.user.id:
-        active_user = User.objects.get(pk=request.user.id)
-        if active_user != user:
+        if request.user.id != user.pk:
+            active_user = User.objects.get(pk=request.user.id)
             if active_user.following.filter(id=id).exists():
                 status = 'Follow'
             else:
@@ -221,7 +222,8 @@ def user_profile(request, id):
             message['newImage'] = user.profile_pic.url
 
         user.save()
-        return JsonResponse(message)
+        print(message)
+        return JsonResponse(message if message else {})
             
     post_list = Post.objects.filter(author=user).order_by('-timestamp')
     comments = Comment.objects.filter(post__in=post_list).order_by("-timestamp")
@@ -249,6 +251,7 @@ def user_profile(request, id):
     return render(request, 'network/user_profile.html', context)
 
 
+@login_required(login_url='/login')
 def following_page(request):
     following = User.objects.get(pk=request.user.id).following
 

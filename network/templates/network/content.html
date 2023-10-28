@@ -10,8 +10,11 @@
             
             <div class="interactions">
                 <div class="interaction-left">
-
-                    <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
+                    {% if  user.is_authenticated %}
+                        <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
+                    {% else %}
+                        <button id='like' data-post-id="{{ post.id }}" class="interaction" disabled></button>
+                    {% endif %}
 
                     {% if post.likes_count > 0 %}
                         <span id="num-likes">{{ post.likes_count }}</span>
