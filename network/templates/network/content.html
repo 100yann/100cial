@@ -1,64 +1,66 @@
-{% if posts %}
-    {% for post in posts %}
-    <div class="single-post">
-        <div class="post-contents">
-            <div class="post-heading">
-                <a id='author' href="{% url 'user' id=post.author.id %}">{{ post.author }}</a>
-                <p>{{ post.timestamp }}</p>
-            </div>
-            <div id="post-text">{{post.post}}</div>
-            
-            <div class="interactions">
-                <div class="interaction-left">
-                    {% if  user.is_authenticated %}
-                        <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
-                    {% else %}
-                        <button id='like' data-post-id="{{ post.id }}" class="interaction" disabled></button>
-                    {% endif %}
+<div id="all-posts">
+    {% if posts %}
+        {% for post in posts %}
+            <div class="single-post">
+                <div class="post-contents">
+                    <div class="post-heading">
+                        <a id='author' href="{% url 'user' id=post.author.id %}">{{ post.author }}</a>
+                        <p>{{ post.timestamp }}</p>
+                    </div>
+                    <div id="post-text">{{post.post}}</div>
+                    
+                    <div class="interactions">
+                        <div class="interaction-left">
+                            {% if  user.is_authenticated %}
+                                <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
+                            {% else %}
+                                <button id='like' data-post-id="{{ post.id }}" class="interaction" disabled></button>
+                            {% endif %}
 
-                    {% if post.likes_count > 0 %}
-                        <span id="num-likes">{{ post.likes_count }}</span>
-                    {% else %}
-                        <span id="num-likes" hidden>{{ post.likes_count }}</span>
-                    {% endif %}
+                            {% if post.likes_count > 0 %}
+                                <span id="num-likes">{{ post.likes_count }}</span>
+                            {% else %}
+                                <span id="num-likes" hidden>{{ post.likes_count }}</span>
+                            {% endif %}
 
-                    <button id="comment" class="interaction"><i class="fa-regular fa-comments fa-lg"></i></button>
+                            <button id="comment" class="interaction"><i class="fa-regular fa-comments fa-lg"></i></button>
 
-                </div>
-                <div class="interactions-right">
-                    {% if user == post.author %}
-                        <button id="edit" class="interaction"><i class="fa-solid fa-pen-to-square fa-lg"></i></button>
-                    {% endif %}
-                </div>
-            </div>
-            <div id="add-comment">
-                <hr>
-                {% if user.is_authenticated %}
-                <div class="new-comment">
-                    <h6>Add a comment:</h6>
-                    {{ add_comment }}
-                    <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
-                </div>
-                {% endif %}
-                <div id="show-comments">
-                    {% for comment in all_comments %}
-                        {% if comment.post_id == post.id %}
-                            <div>
-                                <div class="post-heading">
-                                    <h5><a href="{% url 'user' id=comment.user.id %}">{{ comment.user }}</a></h5>
-                                    <p>{{ comment.timestamp }}</p>
-                                </div>
-                                <p>{{ comment.text }}</p>
-                                <hr>
-                            </div>
+                        </div>
+                        <div class="interactions-right">
+                            {% if user == post.author %}
+                                <button id="edit" class="interaction"><i class="fa-solid fa-pen-to-square fa-lg"></i></button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div id="add-comment">
+                        <hr>
+                        {% if user.is_authenticated %}
+                        <div class="new-comment">
+                            <h6>Add a comment:</h6>
+                            {{ add_comment }}
+                            <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
+                        </div>
                         {% endif %}
-                    {% endfor %}
+                        <div id="show-comments">
+                        {% for comment in all_comments %}
+                            {% if comment.post_id == post.id %}
+                                <div>
+                                    <div class="post-heading">
+                                        <h5><a href="{% url 'user' id=comment.user.id %}">{{ comment.user }}</a></h5>
+                                        <p>{{ comment.timestamp }}</p>
+                                    </div>
+                                    <p>{{ comment.text }}</p>
+                                    <hr>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-{% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
 
 {% if posts.has_previous %}
 <a href="?page=1">&laquo; First</a>

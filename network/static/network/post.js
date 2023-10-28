@@ -5,6 +5,91 @@ document.addEventListener('DOMContentLoaded', function() {
         'X-CSRFToken': csrfToken,
     };
 
+
+    const submitPost = document.getElementById('submit-post')
+    const userId = submitPost.getAttribute('data-profile-id')
+
+    submitPost.onclick = (event) => {
+        event.preventDefault()
+        newPost(headers, userId)
+        
+    }
+    getLikeButtons(headers)
+    getCommentButtons(headers)
+    getEditButtons(headers)
+})
+
+
+
+function newPost(headers, userId){
+    const postText = document.getElementById('new-post').value
+    fetch(`/like/${userId}`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            'post': postText
+        })
+    })
+    .then(response => {
+        return response.json()
+    })
+    .then(data => {
+        const username = data['username']
+        const timestamp = data['timestamp']
+        const date = new Date(timestamp)
+        const options = {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          };
+        
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date).replace(/PM/, 'p.m.');
+        const newPostDiv = document.createElement('div')
+        const postId = data['postId']
+        newPostDiv.classList = 'single-post'
+        newPostDiv.innerHTML = `
+            <div class="post-contents">
+                <div class="post-heading">
+                    <a id='author' href="{% url 'user' id=post.author.id %}">${username}</a>
+                    <p>${formattedDate}</p>
+                </div>
+                <div id="post-text">${postText}</div>
+                
+                <div class="interactions">
+                    <div class="interaction-left">
+                        <button id='like' data-post-id="${postId}" class="interaction"></button>
+                        <span id="num-likes" hidden>0</span>
+                        <button id="comment" class="interaction"><i class="fa-regular fa-comments fa-lg"></i></button>
+                    </div>
+                    <div class="interactions-right">
+                        <button id="edit" class="interaction"><i class="fa-solid fa-pen-to-square fa-lg"></i></button>
+                    </div>
+                </div>
+                <div id="add-comment">
+                    <hr>
+                    <div class="new-comment">
+                        <h6>Add a comment:</h6>
+                        <textarea name="text" cols="80" rows="20" class="form-control" id="comment-value" maxlength="400" required=""></textarea>                        <button id="submit-comment" data-post-id="${postId}" class="btn btn-sm btn-primary">Add Comment</button>
+                    </div>
+                    <div id="show-comments"></div>
+                </div>
+            </div>
+        `
+        const allPosts = document.getElementById('all-posts')
+        allPosts.insertBefore(newPostDiv, allPosts.firstChild)
+        getLikeButtons(headers)
+        getCommentButtons(headers)
+        getEditButtons(headers)
+    })
+
+}
+
+
+// Get like buttons
+function getLikeButtons(headers){
     const likeButton = document.querySelectorAll('#like')
     
     likeButton.forEach((element) => {
@@ -23,27 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
             likePost(element, currentLikes, headers, postId)
         }
     })
-    
-
-    const commentButtons = document.querySelectorAll('#comment')
-    
-    commentButtons.forEach((element) => {
-        // Used to toggle whether to show or hide the comment section
-        let is_clicked = false
-
-        element.onclick = () => {
-            // Display or hide the comment section, depending on is_clicked
-            is_clicked = displayComments(element, is_clicked, headers)
-        }
-
-
-    const editButtons = document.querySelectorAll('#edit')
-    editButtons.forEach((element) =>{
-        const elementParent = element.parentElement.parentElement.parentElement
-        element.onclick = () => editPost(elementParent, headers)
-    })  
-    })
-})
+}
 
 // Get the current likes for each post
 function postCurrentLikes(element, currentLikes, headers, postId){
@@ -100,7 +165,20 @@ function likePost(element, currentLikes, headers, postId){
     }
 }
 
+// Get comment buttons
+function getCommentButtons(headers){
+    const commentButtons = document.querySelectorAll('#comment')
+    
+    commentButtons.forEach((element) => {
+        // Used to toggle whether to show or hide the comment section
+        let is_clicked = false
 
+        element.onclick = () => {
+            // Display or hide the comment section, depending on is_clicked
+            is_clicked = displayComments(element, is_clicked, headers)
+        }
+    })
+}
 // Display comment section
 function displayComments(element, is_clicked, headers){
     const elementParent = element.parentElement.parentElement.parentElement.parentElement
@@ -187,6 +265,13 @@ function addComment(submitComment, elementParent, headers){
         }
     }   
 
+function getEditButtons(headers){
+    const editButtons = document.querySelectorAll('#edit')
+    editButtons.forEach((element) =>{
+        const elementParent = element.parentElement.parentElement.parentElement
+        element.onclick = () => editPost(elementParent, headers)
+    })  
+}
 
 // Edit an existing post
 function editPost(element, headers){

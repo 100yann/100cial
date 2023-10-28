@@ -23,7 +23,7 @@ class User(AbstractUser):
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.CharField(max_length=400)
-    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
+    timestamp = models.DateTimeField(blank=True)
     likes = models.ManyToManyField(User, related_name="liked_posts", default=0)
 
     def __str__(self) -> str:

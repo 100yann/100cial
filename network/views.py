@@ -9,7 +9,7 @@ from .models import User, Post, PostForm, Comment, CommentForm, UserDetails
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 
 
 
@@ -18,8 +18,9 @@ def index(request):
         form = PostForm(request.POST)
         if form.is_valid():
             new_post = form.cleaned_data['post']
+            time = timezone.now()
             user = User.objects.get(id=request.user.id)
-            Post.objects.create(author=user, post=new_post)
+            Post.objects.create(author=user, post=new_post, timestamp=time)
     post_list = Post.objects.all().order_by('-timestamp')
     
     # Set up Pagination
@@ -89,10 +90,10 @@ def register(request):
 
 
 def like_post(request, id):
-    post = Post.objects.get(pk=id)
-    user = request.user
     
     if request.method == "PUT":
+        post = Post.objects.get(pk=id)
+        user = request.user
         if post.likes.filter(id=user.id).exists():
             post.likes.remove(request.user)
             messsage = f"User unliked post {id}"
@@ -107,7 +108,21 @@ def like_post(request, id):
             'found': liked
             })
     
+    elif request.method == "POST":
+        data = json.loads(request.body)
+        post_text = data['post']
+        user = User.objects.get(pk=id)
+        time = timezone.now()
+        post = Post.objects.create(author=user, post=post_text, timestamp=time)
+        return JsonResponse({
+            'message': 'Posted successfully',
+            'timestamp': time,
+            'username': user.username,
+            'postId': post.pk
+        })
     elif request.method == "GET":
+        post = Post.objects.get(pk=id)
+        user = request.user
         if post.likes.filter(id=user.id).exists():
             message = f'User already liked post {id}'
             liked = True
