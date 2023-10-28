@@ -11,9 +11,8 @@
             <div class="interactions">
                 <div class="interaction-left">
 
-                    {% if user.is_authenticated %}
                     <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
-                    {% endif %}
+
                     {% if post.likes_count > 0 %}
                         <span id="num-likes">{{ post.likes_count }}</span>
                     {% else %}
@@ -31,11 +30,13 @@
             </div>
             <div id="add-comment">
                 <hr>
+                {% if user.is_authenticated %}
                 <div class="new-comment">
                     <h6>Add a comment:</h6>
                     {{ add_comment }}
                     <button id="submit-comment" data-post-id="{{ post.id }}" class="btn btn-sm btn-primary">Add Comment</button>
                 </div>
+                {% endif %}
                 <div id="show-comments">
                     {% for comment in all_comments %}
                         {% if comment.post_id == post.id %}

@@ -156,27 +156,29 @@ def edit_post(request, id):
 
 
 def user_profile(request, id):
-    active_user = User.objects.get(pk=request.user.id)
     user = User.objects.get(pk=id)
-    if active_user != user:
-        if active_user.following.filter(id=id).exists():
-            status = 'Follow'
-        else:
-            status = 'Unfollow'
 
-        if request.method == 'PUT':
-            if status == 'Follow':
-                active_user.unfollow(user)
-                user.followed_by = user.followed_by - 1
+    if request.user.id:
+        active_user = User.objects.get(pk=request.user.id)
+        if active_user != user:
+            if active_user.following.filter(id=id).exists():
+                status = 'Follow'
             else:
-                active_user.follow(user)
-                user.followed_by = user.followed_by + 1
+                status = 'Unfollow'
 
-            user.save()
-            return JsonResponse({
-                'message': status, 
-                'num_followers': user.followed_by
-                })
+            if request.method == 'PUT':
+                if status == 'Follow':
+                    active_user.unfollow(user)
+                    user.followed_by = user.followed_by - 1
+                else:
+                    active_user.follow(user)
+                    user.followed_by = user.followed_by + 1
+
+                user.save()
+                return JsonResponse({
+                    'message': status, 
+                    'num_followers': user.followed_by
+                    })
 
     if request.method == 'POST':
         message = {}

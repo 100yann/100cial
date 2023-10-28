@@ -3,13 +3,17 @@
 {% block body %}
     <div class="container">
         <div class="home">
-            <div class="form">
-                <h3>What's on your mind?</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ create_post }}
-                    <input type="submit" class='btn btn-sm btn-primary' name="new_post" value="Post">
-                </form>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="form">
+                    <h1>What's on your mind?</h1>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ create_post }}
+                        <input type="submit" class='btn btn-sm btn-primary' name="new_post" value="Post">
+                    </form>
+                </div>
+            {% else %}
+                <h1>Log in to post</h1>
+            {% endif %}
             {% include "network/content.html" %}
 {% endblock %}

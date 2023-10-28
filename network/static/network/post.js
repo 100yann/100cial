@@ -116,9 +116,11 @@ function displayComments(element, is_clicked, headers){
     }
 
     const submitComment = elementParent.querySelector('#submit-comment')
+    if (submitComment){
     // Button to submit a new comment
     submitComment.onclick = () => {
         addComment(submitComment, elementParent, headers)
+        }
     }
     return is_clicked
 }
@@ -146,8 +148,20 @@ function addComment(submitComment, elementParent, headers){
                 // Get the data that needs to be included in the 
                 // new comment
                 const username = data.new_comment['user']
-                const timestamp = data.new_comment['timestamp']
                 const userId = data.new_comment['userId']
+
+                const timestamp = data.new_comment['timestamp']
+                const date = new Date(timestamp)
+                const options = {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                  };
+                
+                const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date).replace(/PM/, 'p.m.');
 
                 const showComments = submitComment.parentElement.parentElement.querySelector('#show-comments');
                 
@@ -156,7 +170,7 @@ function addComment(submitComment, elementParent, headers){
                 div.innerHTML = `
                     <div class="post-heading">
                         <h5><a href="/user/${userId}">${username}</a></h5>
-                    <p>${timestamp}</p>
+                    <p>${formattedDate}</p>
                     </div>
                     <p>${commentValue}</p>
                     <hr>
