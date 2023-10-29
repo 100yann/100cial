@@ -5,29 +5,29 @@ document.addEventListener('DOMContentLoaded', function() {
         'X-CSRFToken': csrfToken,
     };
 
-
-    const submitPost = document.getElementById('submit-post')
-    const userId = submitPost.getAttribute('data-profile-id')
-
-    submitPost.onclick = (event) => {
-        event.preventDefault()
-        newPost(headers, userId)
-        
-    }
     getLikeButtons(headers)
     getCommentButtons(headers)
     getEditButtons(headers)
+    const submitPost = document.getElementById('submit-post')
+    if (submitPost){
+        submitPost.onclick = (event) => {
+            const userId = submitPost.getAttribute('data-profile-id')
+
+            event.preventDefault()
+            newPost(headers, userId)
+        }  
+    }
 })
 
 
 
 function newPost(headers, userId){
-    const postText = document.getElementById('new-post').value
+    const postText = document.getElementById('new-post')
     fetch(`/like/${userId}`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
-            'post': postText
+            'post': postText.value
         })
     })
     .then(response => {
@@ -56,7 +56,7 @@ function newPost(headers, userId){
                     <a id='author' href="{% url 'user' id=post.author.id %}">${username}</a>
                     <p>${formattedDate}</p>
                 </div>
-                <div id="post-text">${postText}</div>
+                <div id="post-text">${postText.value}</div>
                 
                 <div class="interactions">
                     <div class="interaction-left">
@@ -80,6 +80,9 @@ function newPost(headers, userId){
         `
         const allPosts = document.getElementById('all-posts')
         allPosts.insertBefore(newPostDiv, allPosts.firstChild)
+
+        // clear post textarea
+        postText.value = ''
         getLikeButtons(headers)
         getCommentButtons(headers)
         getEditButtons(headers)

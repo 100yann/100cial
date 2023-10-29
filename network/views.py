@@ -175,26 +175,24 @@ def user_profile(request, id):
     user = User.objects.get(pk=id)
 
     if request.user.id:
-        if request.user.id != user.pk:
+        if request.user.id != user.pk and request.method =='PUT':
             active_user = User.objects.get(pk=request.user.id)
+            user_to_follow = User.objects.get(pk=id)
+
             if active_user.following.filter(id=id).exists():
-                status = 'Follow'
-            else:
                 status = 'Unfollow'
+                active_user.unfollow(user_to_follow)
+            else:
+                status = 'Follow'
+                active_user.follow(user_to_follow)
 
-            if request.method == 'PUT':
-                if status == 'Follow':
-                    active_user.unfollow(user)
-                    user.followed_by = user.followed_by - 1
-                else:
-                    active_user.follow(user)
-                    user.followed_by = user.followed_by + 1
+            active_user.save()
+            followers = User.objects.filter(following=user).count()
 
-                user.save()
-                return JsonResponse({
-                    'message': status, 
-                    'num_followers': user.followed_by
-                    })
+            return JsonResponse({
+                'message': status, 
+                'num_followers': followers
+                })
 
     if request.method == 'POST':
         message = {}
@@ -237,7 +235,6 @@ def user_profile(request, id):
             message['newImage'] = user.profile_pic.url
 
         user.save()
-        print(message)
         return JsonResponse(message if message else {})
             
     post_list = Post.objects.filter(author=user).order_by('-timestamp')
@@ -248,16 +245,23 @@ def user_profile(request, id):
     p = Paginator(post_list, 10)
     page = request.GET.get('page')
     posts = p.get_page(page)
-
+    followers = User.objects.filter(following=user)
+    follower_ids = [follower.id for follower in followers]
+    if request.user.id in follower_ids:
+        follows = True
+    else:
+        follows = False
     context = {
         'profile': user,
-        'posts': posts,
+        'posts': post_list,
         'all_comments': comments,
         'create_post': PostForm,
         'add_comment': CommentForm,
         'user_details': UserDetails,
+        'followers': followers.count,
+        'follows': follows
     }
-
+    
     try:
         context['follows'] = status
     except UnboundLocalError:
