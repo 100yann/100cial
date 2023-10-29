@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from PIL import Image
 
 
 def index(request):
@@ -88,7 +88,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-
+@login_required(login_url='/login')
 def like_post(request, id):
     
     if request.method == "PUT":
@@ -211,26 +211,26 @@ def user_profile(request, id):
             user.description = new_description
             message['newDescription'] = True
         if new_image:
+            image = Image.open(new_image)
+            image.resize((300,300))
 
             # remove old profile pic
             curr_profile_pic = user.profile_pic.url.replace('/media/', '')
             media_root = settings.MEDIA_ROOT
             cwd = os.getcwd()
             path_to_pp = os.path.join(cwd, media_root, curr_profile_pic)
-            try:
-                os.remove(path_to_pp)
-            except FileNotFoundError:
-                pass
+            if curr_profile_pic != 'profile_pics/default.png':
+                try:
+                    os.remove(path_to_pp)
+                except FileNotFoundError:
+                    pass
 
             # save new profile pic
             file_name, file_extension = os.path.splitext(new_image.name)
             new_file_name = f"{user.username}_pp{file_extension}"
             path_to_new_pp = os.path.join(media_root, 'profile_pics', new_file_name)
             
-            with open(path_to_new_pp, 'wb') as new_file:
-                for chunk in new_image.chunks():
-                    new_file.write(chunk)
-
+            image.save(path_to_new_pp)
             user.profile_pic = 'profile_pics/' + new_file_name
             message['newImage'] = user.profile_pic.url
 
@@ -240,11 +240,6 @@ def user_profile(request, id):
     post_list = Post.objects.filter(author=user).order_by('-timestamp')
     comments = Comment.objects.filter(post__in=post_list).order_by("-timestamp")
 
-    
-    # Set up Pagination
-    p = Paginator(post_list, 10)
-    page = request.GET.get('page')
-    posts = p.get_page(page)
     followers = User.objects.filter(following=user)
     follower_ids = [follower.id for follower in followers]
     if request.user.id in follower_ids:

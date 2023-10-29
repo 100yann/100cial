@@ -62,14 +62,7 @@
     {% endif %}
 </div>
 
-{% if posts.has_previous %}
-<a href="?page=1">&laquo; First</a>
-<a href="?page={{ posts.previous_page_number }}">Previous</a>
-{% endif %}
+{% for page in posts.paginator.page_range %}
+<li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+{% endfor %}
 
-Page {{ posts.number }}
-
-{% if posts.has_next %}
-<a href="?page={{ posts.next_page_number }}">Next </a>
-
-{% endif %}
