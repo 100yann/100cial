@@ -6,9 +6,9 @@ from django_countries.fields import CountryField
 class User(AbstractUser):
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True, null=True)
     birthday = models.DateField(blank=True, null=True)
-    nationality = CountryField(null=True)
+    nationality = CountryField(null=True, blank=True, default='')
     profile_pic = models.ImageField(upload_to="profile_pics", default='profile_pics/default.png')
-    description = models.TextField(max_length=600, null=True)
+    description = models.TextField(max_length=600, null=True, blank=True, default='')
 
     def follow(self, follow_user):
         if follow_user != self:

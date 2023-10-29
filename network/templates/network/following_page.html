@@ -4,6 +4,12 @@
 {% csrf_token %}
 
 <div class="container">
+    {% if not posts %}
+    <div>
+        <h3>You're currently not following any users!</h3>
+        <p>This page only displays posts of users you're following.</p>
+    </div>
+    {% endif %}
     {% include "network/content.html" %}
 
 </div>

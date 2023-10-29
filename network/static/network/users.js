@@ -27,7 +27,6 @@ function toggleFollowStatus(element, headers, profileId){
             }
         })
         .then(data => {
-            console.log(data)
             const status = data['message']
             const numFollowers = data['num_followers']
             element.textContent = status

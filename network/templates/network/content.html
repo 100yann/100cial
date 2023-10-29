@@ -62,7 +62,15 @@
     {% endif %}
 </div>
 
-{% for page in posts.paginator.page_range %}
-<li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
-{% endfor %}
+<ul class="pagination">
+    {% if posts.paginator.count > 1 %}
+        {% for page in posts.paginator.page_range %}
+            {% if page == curr_page %}
+                <li class="page-item"><a class="page-link disabled" href="?page={{ page }}">{{ page }}</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</ul>
 

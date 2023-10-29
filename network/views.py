@@ -27,12 +27,14 @@ def index(request):
     p = Paginator(post_list, 10)
     page = request.GET.get('page')
     posts = p.get_page(page)
-
+    if not page:
+        page = '1'
     context = {
         'create_post': PostForm,
         'posts': posts,
         'add_comment': CommentForm,
-        'all_comments': Comment.objects.all().order_by("-timestamp")
+        'all_comments': Comment.objects.all().order_by("-timestamp"),
+        'curr_page': int(page)
     }
     return render(request, "network/index.html", context)
 
@@ -180,17 +182,17 @@ def user_profile(request, id):
             user_to_follow = User.objects.get(pk=id)
 
             if active_user.following.filter(id=id).exists():
-                status = 'Unfollow'
+                message = 'Follow'
                 active_user.unfollow(user_to_follow)
             else:
-                status = 'Follow'
+                message = 'Unfollow'
                 active_user.follow(user_to_follow)
 
             active_user.save()
             followers = User.objects.filter(following=user).count()
 
             return JsonResponse({
-                'message': status, 
+                'message': message, 
                 'num_followers': followers
                 })
 
@@ -256,11 +258,6 @@ def user_profile(request, id):
         'followers': followers.count,
         'follows': follows
     }
-    
-    try:
-        context['follows'] = status
-    except UnboundLocalError:
-        pass
 
     return render(request, 'network/user_profile.html', context)
 
@@ -276,11 +273,14 @@ def following_page(request):
     # Set up Pagination
     p = Paginator(post_list, 10)
     page = request.GET.get('page')
+    if not page:
+        page = '1'
     posts = p.get_page(page)
     context = {
         'posts': posts,
         'all_comments': comments,
         'add_comment': CommentForm,
+        'curr_page': int(page)
 
     }
     return render(request, 'network/following_page.html', context)

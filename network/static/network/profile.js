@@ -81,7 +81,7 @@ function editProfile(userId, isDefault){
 
             const formattedDate = `${monthNames[month]} ${day}, ${year}`;
 
-            currBirthday.innerHTML = `<i class="fa-solid fa-cake-candles fa-lg mr-2"></i>${formattedDate}`
+            currBirthday.innerHTML = `<i class="fa-solid fa-cake-candles fa-lg mr-2"></i> ${formattedDate}`
         }
         if (data.hasOwnProperty('newDescription')){
             const currDescription = document.querySelector('#user-description')
@@ -89,7 +89,7 @@ function editProfile(userId, isDefault){
         }
         if (data.hasOwnProperty('newNationality')){
             const currNationality = document.querySelector('#user-nationality')
-            currNationality.innerHTML = `<i class="fa-solid fa-earth-europe fa-lg mr-2"></i>${data['newNationality']}`
+            currNationality.innerHTML = `<i class="fa-solid fa-earth-europe fa-lg mr-2"></i> ${data['newNationality']}`
         }
         if (data.hasOwnProperty('newImage')){
             const currProfilePic = document.querySelector('#user-profile-pic')

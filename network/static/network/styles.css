@@ -42,7 +42,12 @@ h1, h3, h5{
 a:any-link {
     color: black;
 }
-
+a.disabled {
+    background-color: rgb(234, 234, 234);
+    opacity: 0.55;
+    pointer-events: none;
+    cursor: default;
+}
 .btn-primary {
     padding: 5px 25px;
     background-color: #6AB07D;

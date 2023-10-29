@@ -13,9 +13,13 @@
             </div>
             <hr>
             <div id="profile-details">
-                <i class="fa-solid fa-envelope-open-text fa-lg mr-2"></i>{{ profile.email }}
-                <span id="user-birthday"><i class="fa-solid fa-cake-candles fa-lg mr-2"></i>{{ profile.birthday }}</span>
-                <span id="user-nationality"><i class="fa-solid fa-earth-europe fa-lg mr-2"></i>{{ profile.nationality.name }}</span>
+                <i class="fa-solid fa-envelope-open-text fa-lg mr-2"></i> {{ profile.email }}
+                <span id="user-birthday"><i class="fa-solid fa-cake-candles fa-lg mr-2"></i>
+                {% if not profile.birthday %} Not specified {% else %} {{ profile.birthday }}{% endif %}
+                </span>
+                <span id="user-nationality"><i class="fa-solid fa-earth-europe fa-lg mr-2"></i>
+                {% if not profile.nationality.name %} Not specified {% else %} {{ profile.nationality.name }}{% endif %}
+                </span>
                 <hr>
                 <div id="display-followers">
                     <div>
