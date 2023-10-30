@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function newPost(headers, userId){
     const postText = document.getElementById('new-post')
+    if (postText.value != '') {
+
     fetch(`/like/${userId}`, {
         method: 'POST',
         headers: headers,
@@ -42,7 +44,7 @@ function newPost(headers, userId){
             year: 'numeric',
             month: 'short',
             day: '2-digit',
-            hour: '2-digit',
+            hour: 'numeric',
             minute: '2-digit',
             hour12: true,
           };
@@ -82,6 +84,7 @@ function newPost(headers, userId){
                 </div>
             </div>
         `
+
         const allPosts = document.getElementById('all-posts')
         allPosts.insertBefore(newPostDiv, allPosts.firstChild)
 
@@ -90,8 +93,9 @@ function newPost(headers, userId){
         getLikeButtons(headers)
         getCommentButtons(headers)
         getEditButtons(headers)
+    
     })
-
+  }
 }
 
 
@@ -241,7 +245,7 @@ function addComment(submitComment, elementParent, headers){
                     year: 'numeric',
                     month: 'short',
                     day: '2-digit',
-                    hour: '2-digit',
+                    hour: 'numeric',
                     minute: '2-digit',
                     hour12: true,
                   };

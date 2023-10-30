@@ -112,11 +112,10 @@ def like_post(request, id):
         data = json.loads(request.body)
         post_text = data['post']
         user = User.objects.get(pk=id)
-        time = timezone.now()
-        post = Post.objects.create(author=user, post=post_text, timestamp=time)
+        post = Post.objects.create(author=user, post=post_text)
         return JsonResponse({
             'message': 'Posted successfully',
-            'timestamp': time,
+            'timestamp': post.timestamp,
             'username': user.username,
             'user_pfp': user.profile_pic.url,
             'postId': post.pk
