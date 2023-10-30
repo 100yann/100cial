@@ -4,14 +4,17 @@
             <div class="single-post">
                 <div class="post-contents">
                     <div class="post-heading">
-                        <a id='author' href="{% url 'user' id=post.author.id %}">{{ post.author }}</a>
-                        <p>{{ post.timestamp }}</p>
+                        <div>
+                            <img id='post-pfp' src="{{ post.author.profile_pic.url }}" alt="profile picture">
+                            <a id='author' href="{% url 'user' id=post.author.id %}">{{ post.author }}</a>
+                        </div>
+                        <p id="post-date">{{ post.timestamp }}</p>
                     </div>
                     <div id="post-text">{{post.post}}</div>
                     
                     <div class="interactions">
                         <div class="interaction-left">
-                            {% if  user.is_authenticated %}
+                            {% if user.is_authenticated %}
                                 <button id='like' data-post-id="{{ post.id }}" class="interaction"></button>
                             {% else %}
                                 <button id='like' data-post-id="{{ post.id }}" class="interaction" disabled></button>
@@ -46,7 +49,10 @@
                             {% if comment.post_id == post.id %}
                                 <div>
                                     <div class="post-heading">
-                                        <h5><a href="{% url 'user' id=comment.user.id %}">{{ comment.user }}</a></h5>
+                                        <div class="comment-heading">
+                                            <img id='comment-pfp' src="{{ post.author.profile_pic.url }}" alt="profile picture">
+                                            <h5 class="comment-author"><a href="{% url 'user' id=comment.user.id %}">{{ comment.user }}</a></h5>
+                                        </div>
                                         <p>{{ comment.timestamp }}</p>
                                     </div>
                                     <p>{{ comment.text }}</p>

@@ -9,9 +9,10 @@ ul {
     margin: 0;
 }
 
-h1, h3, h5{
+h1, h2, h3, h5{
     font-family: 'Kanit', sans-serif;
 }
+
 #search {
     margin-right: 10px;
 }
@@ -71,11 +72,10 @@ a.disabled {
 #comment {
     margin-left: 10px;
 }
-#like {
-    padding: 0;}
-.button-liked{
-    color: red;
-}
+#like { padding: 0;}
+
+.button-liked{color: red;}
+
 .profile {
     background-color: #ffffff;
     border-radius: 25px;
@@ -83,12 +83,15 @@ a.disabled {
     text-align: center;
     height: fit-content;
 }
+#user-profile-pic{
+    width: 100%;
+    margin-top: 10px;
+}
+
+
 .fa-cake-candles{
     width: 20px;
 
-}
-#user-profile-pic{
-    margin-top: 10px;
 }
 
 #display-followers{
@@ -139,6 +142,12 @@ a.disabled {
     justify-content: space-between;
     margin-bottom: 12px;
 }
+#post-pfp {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin-right: 5px;
+}
 
 #post-text{
     margin-bottom: 12px;
@@ -181,6 +190,19 @@ a.disabled {
 #submit-comment{
     margin-top: 10px;
 }
+.comment-heading {
+    vertical-align: middle;
+    display: flex;
+}
+.comment-author{
+    margin: auto;
+}
+#comment-pfp{
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+    margin-right: 5px;
+}
 
 #comment-value {
     height: 75px;
@@ -193,4 +215,40 @@ a.disabled {
 
 #edit-view {
     display: none;
+}
+
+.login {
+    max-width: 55%;
+    margin: 20px auto;
+}
+@media (max-width: 991.5px){
+    .login{
+        max-width: 70%;
+    }
+}
+
+@media (max-width: 1200px){
+    #post-date {
+        font-size: 12px;
+    }
+    .profile {
+        width: 75%;
+        margin: 0 auto 20px;
+    }
+    .user-posts {
+        width: 85%;
+        margin: 25px auto;
+    }
+}
+@media (max-width: 991.5px){
+    #user-profile-pic{
+        width: 50%;
+    }
+    .single-post{
+        width: 100%;
+    }
+    .home{
+        max-width: 100%;
+        margin: 15px;
+    }
 }

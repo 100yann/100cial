@@ -90,9 +90,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-@login_required(login_url='/login')
 def like_post(request, id):
-    
     if request.method == "PUT":
         post = Post.objects.get(pk=id)
         user = request.user
@@ -120,6 +118,7 @@ def like_post(request, id):
             'message': 'Posted successfully',
             'timestamp': time,
             'username': user.username,
+            'user_pfp': user.profile_pic.url,
             'postId': post.pk
         })
     elif request.method == "GET":
@@ -153,7 +152,8 @@ def add_comment(request, id):
                 'text': new_comment.text,
                 'user': new_comment.user.username,
                 'timestamp': new_comment.timestamp,
-                'userId': user.id
+                'userId': user.id,
+                'user_pfp': user.profile_pic.url
             }
         }
         return JsonResponse(context)

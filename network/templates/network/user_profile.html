@@ -7,7 +7,9 @@
     <div class="row">
         <div class="col-lg-3 profile">
             <div id="profile-heading">
-                <img id="user-profile-pic"src="{{ profile.profile_pic.url }}" alt="profile picture">
+                <div>
+                    <img id="user-profile-pic" src="{{ profile.profile_pic.url }}" alt="profile picture">
+                </div>
                 <h1>{{ profile }}</h1>
                 <span id="user-description">{{ profile.description }}</span>
             </div>
@@ -44,7 +46,7 @@
                 {% endif %}
             {% endif %}
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-8 user-posts">
             {% if user.id == profile.id %}
                 <div class="form">
                     <h3>What's on your mind?</h3>

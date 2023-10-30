@@ -35,6 +35,7 @@ function newPost(headers, userId){
     })
     .then(data => {
         const username = data['username']
+        const profilePic = data['user_pfp']
         const timestamp = data['timestamp']
         const date = new Date(timestamp)
         const options = {
@@ -53,8 +54,11 @@ function newPost(headers, userId){
         newPostDiv.innerHTML = `
             <div class="post-contents">
                 <div class="post-heading">
-                    <a id='author' href="{% url 'user' id=post.author.id %}">${username}</a>
-                    <p>${formattedDate}</p>
+                    <div>
+                        <img id='post-pfp' src="${profilePic}" alt="profile picture">
+                        <a id='author' href="{% url 'user' id=post.author.id %}">${username}</a>
+                    </div>
+                    <p id="post-date">${formattedDate}</p>
                 </div>
                 <div id="post-text">${postText.value}</div>
                 
@@ -230,7 +234,7 @@ function addComment(submitComment, elementParent, headers){
                 // new comment
                 const username = data.new_comment['user']
                 const userId = data.new_comment['userId']
-
+                const profilePic = data.new_comment['user_pfp']
                 const timestamp = data.new_comment['timestamp']
                 const date = new Date(timestamp)
                 const options = {
@@ -250,8 +254,11 @@ function addComment(submitComment, elementParent, headers){
                 let div = document.createElement('div');
                 div.innerHTML = `
                     <div class="post-heading">
-                        <h5><a href="/user/${userId}">${username}</a></h5>
-                    <p>${formattedDate}</p>
+                        <div class="comment-heading">
+                            <img id='comment-pfp' src="${profilePic}" alt="profile picture">
+                            <h5><a href="/user/${userId}">${username}</a></h5>
+                        </div>
+                        <p>${formattedDate}</p>
                     </div>
                     <p>${commentValue}</p>
                     <hr>
